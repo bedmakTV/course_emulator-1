@@ -1,0 +1,12 @@
+function F:
+	MOV G2 478
+RET
+
+PUSH 10
+JMP  X
+PUSH 20
+PUSH 255
+X:
+PUSH dword 20
+CALL F
+HLT
