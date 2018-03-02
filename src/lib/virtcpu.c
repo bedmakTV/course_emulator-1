@@ -125,7 +125,7 @@ void printECM(ECM *ecm, int width, int start, int end) {
 	while (start < ecm->memsz && start < end) {
 		int ist = start == regToInt(ecm->sregs);
 		int isp = start == regToInt(ecm->sregs + 3) || start - 1 == regToInt(ecm->sregs + 3);
-		int itt = isatty(1);
+		int itt = 0; //isatty(1);
 
 		if (ist)
 			printf("%s", itt ? " \e[1;32m" : ">");
