@@ -1,4 +1,5 @@
 GOALS = ./lib ./nyasm ./emulator
+GLOBALFLAGS =
 
 EXT   = .c
 
