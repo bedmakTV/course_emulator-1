@@ -1,6 +1,5 @@
 function f:
 	MOV G1, 0	
-	CALL f2
 RET
 
 MOV  G0,  10
