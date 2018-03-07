@@ -367,12 +367,13 @@ int run(ECM *ecm) {
 					ecm->flags,
 					FLAG_DIZ * !((regToInt(&tr1) - regToInt(&tr2)) != 0)
 				);
+
 				break;
 
 			case JE:
 			case JNE:
-				if ( ((ecm->flags & FLAG_DIZ) && bt == JE) ||
-					(!(ecm->flags & FLAG_DIZ) && bt == JNE)
+				if ( ((ecm->flags & FLAG_DIZ) && (bt & CMD_MASK) == JE) ||
+					(!(ecm->flags & FLAG_DIZ) && (bt & CMD_MASK) == JNE)
 				) {
 					SET_FLAG(ecm->flags, FLAG_NSC);
 					intToReg(posrg, regToInt(&tr1));
