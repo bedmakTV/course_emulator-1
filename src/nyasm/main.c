@@ -1,25 +1,33 @@
 #include <stdio.h>
+#include <string.h>
 #include "nyasm.h"
 
 int main(int argc, char **argv) {
-	char  defname[] = "a.out";
-	char *inm;
-	char *onm;
-	int   err = 0;
 	ECM   e;
+	int   err      = 0, i;
+	char  dcname[] = "ecm.cfg";
+	char  dename[] = "a.out";
+	char *confnm   = dcname;
+	char *exefnm   = dename;
+	char *inpfnm;
 	code  cd;
 
 	if (argc > 1) {
-		inm = argv[1];
-		onm = argc > 2 ? argv[2] : defname;
+		inpfnm = argv[1];
+
+		for (i = 2; i < argc; ++i)
+			if (!strcmp(argv[i], "-c"))
+				confnm = argv[i++ + 1];
+			else
+				exefnm = argv[i];
 	}
 
-	err = coderead(inm, &cd);
+	err = coderead(inpfnm, &cd);
 
 	if (!err) {
-		err = getECfg   (&e,   "ecm.cfg");
+		err = getECfg   (&e,   confnm);
 		codeprint (NULL, &cd);
-		err = codecmpl  (onm,  &cd, &e);
+		err = codecmpl  (exefnm,  &cd, &e);
 		deleteCode(&cd);
 		stopECM   (&e);
 	}
