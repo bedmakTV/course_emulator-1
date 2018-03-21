@@ -1,0 +1,14 @@
+mov [80], 0
+mov [82], 8
+
+FOR:
+inc [80]
+dec [82]
+cmp [82], 0
+JE EXIT
+jmp FOR
+EXIT:
+
+mov [G0 + 200], 16
+
+hlt
