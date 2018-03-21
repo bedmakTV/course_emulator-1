@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include "nyasm.h"
 
+#define errprint(args...) /* (stderr, args) */
+
 #define FNC_PREFIX "fnc_"
 #define RET_PREFIX "ret_"
 
@@ -154,19 +156,19 @@ int coderead(char *ifile, code *cd) {
 					addLine(cd, ln);
 			}
 			else if (t = strchr(ln, '[')) {
-				char  t1[MAX_LEN];
 				char  t2[MAX_LEN];
 				char  t3[MAX_LEN];
 				char  tx[2];
 				char *te = strchr(t, ']');
 
 				tx[0] = '\0';
+				t2[0] = '\0';
+				t3[0] = '\0';
 
-				strncpy(t1, t + 1, te - t - 1);
-				t1[te - t] = '\0';
-				sscanf (t1, "%s%s%s", t2, tx, t3);
+				*te = '\0';
+				sscanf (t + 1, "%s%s%s", t2, tx, t3);
 
-				fprintf(stderr, "%s %s %s\n", t2, tx, t3);
+				fprintf(stderr, "%s%s%s\n", t2, tx, t3);
 
 				sprintf(t_str, "MOV S2 %s", t2);
 				addLine(cd, t_str);
@@ -315,7 +317,7 @@ int parseLine(ECM *e, line *l, line **jmps, int *szbln) {
 
 						jmps[noj++] = l;
 						jmps[noj]   = NULL;
-						arg[i]      = 0;
+						arg [i]     = 0;
 						break;
 
 					default:
@@ -354,6 +356,8 @@ int codecmpl(char *ofile, code *cd, ECM *e) {
 		for (i = 0; i < cd->nln; ++i)
 			szByLn[i + 1] = parseLine(e, cd->lns + i, jmps, szByLn + i);
 
+		errprint("compiling %d\n", __LINE__);
+
 		for (i = 0; jmps[i]; ++i) {
 			setInt32 (
 				e->mem + szByLn[jmps[i] - cd->lns] + CMD_SIZE,
@@ -361,7 +365,7 @@ int codecmpl(char *ofile, code *cd, ECM *e) {
 				szByLn[atoi(getDefbyName(cd->lbs, cd->nlb, jmps[i]->arg[0]))]
 			);
 
-			printf("JUMPS\n%s\n%d\n%d\n",
+			errprint("JUMPS\n%s %d %d\n",
 				jmps[i]->arg[0],
 				szByLn[jmps[i] - cd->lns] + CMD_SIZE,
 				getInt32(e->mem + szByLn[jmps[i] - cd->lns] + CMD_SIZE, 4)
