@@ -128,7 +128,7 @@ int coderead(char *ifile, code *cd) {
 			while (strchr(ln, ':'))
 				ln = getNE(addLabel(cd, ln));
 
-			/* Now, even if we had labels, there all lefter than 'ln' */
+			/* Now, even if we had labels, they are all lefter than 'ln' */
 			if (hf) {
 				static int sfln = strlen("function ");
 
