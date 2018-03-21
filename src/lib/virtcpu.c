@@ -35,6 +35,8 @@ int initECM(ECM *ecm, int *gr, int *sr, int memsz) {
 
 	ecm->flags = 0;
 
+	fprintf(stderr, "%d %d\n", ecm->gNum, ecm->sNum);
+
 	return 0;
 }
 
@@ -46,6 +48,8 @@ int initECM(ECM *ecm, int *gr, int *sr, int memsz) {
 int getECfg(ECM *ecm , char *iflnm) {
 	FILE *ifile = fopen(iflnm, "r");
 	int   err = 0;
+
+	fprintf(stderr, "Using   config: %s\n", iflnm);
 
 	if (ifile) {
 		int gr[2], sr[2];
@@ -320,7 +324,7 @@ int run(ECM *ecm) {
 
 			case INC:
 			case DEC:
-				add   (&tr1, (1 - 2 * ((bt & CMD_MASK) == SUB)));
+				add   (&tr1, (1 - 2 * ((bt & CMD_MASK) == DEC)));
 				break;
 
 			case XOR:
