@@ -35,8 +35,6 @@ int initECM(ECM *ecm, int *gr, int *sr, int memsz) {
 
 	ecm->flags = 0;
 
-	fprintf(stderr, "%d %d\n", ecm->gNum, ecm->sNum);
-
 	return 0;
 }
 
@@ -85,8 +83,6 @@ int loadExe(ECM *ecm, char *exename) {
 	}
 	else
 		err = -1;
-
-	fprintf(stderr, "%s %d\n", exename, err);
 
 	return err;
 }

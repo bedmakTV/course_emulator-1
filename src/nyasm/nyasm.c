@@ -33,6 +33,7 @@ const char *comarr[] = {
 void clearColon(char *str) {
 	while (*(str++) && *str != ':')
 		;
+
 	*str = '\0';
 }
 
@@ -117,7 +118,7 @@ int coderead(char *ifile, code *cd) {
 			char *ln = getNE(rln);
 
 			/* In order to not mix up with labels */
-			if (strstr(ln, "function"))
+			if (strstr(ln, "function") || strstr(ln, "FUNCTION"))
 				clearColon(ln);
 
 			/* there might be several labels on line, & code after them */
@@ -125,7 +126,7 @@ int coderead(char *ifile, code *cd) {
 				ln = getNE(addLabel(cd, ln));
 
 			/* Now, even if we had labels, there all lefter than 'ln' */
-			if (strstr(ln, "function")) {
+			if (strstr(ln, "function") || strstr(ln, "FUNCTION")) {
 				static int sfln = strlen("function ");
 
 				sprintf   (t_str, "JMP " RET_PREFIX "%s", ln + sfln);
@@ -167,8 +168,6 @@ int coderead(char *ifile, code *cd) {
 
 				*te = '\0';
 				sscanf (t + 1, "%s%s%s", t2, tx, t3);
-
-				fprintf(stderr, "%s%s%s\n", t2, tx, t3);
 
 				sprintf(t_str, "MOV S2 %s", t2);
 				addLine(cd, t_str);
