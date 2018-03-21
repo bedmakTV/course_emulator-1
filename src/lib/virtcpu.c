@@ -363,7 +363,7 @@ int run(ECM *ecm) {
 			case CMP:
 				ecm->flags |= FLAG_SSA;
 				as2 = getArg(ecm, &tr2, pos + CMD_SIZE + as1, bt, 1);
-				CLR_FLAG(ecm->flgas, FLAG_DIZ);
+				CLR_FLAG(ecm->flags, FLAG_DIZ);
 				SET_FLAG    (
 					ecm->flags,
 					FLAG_DIZ * !((regToInt(&tr1) - regToInt(&tr2)) != 0)
