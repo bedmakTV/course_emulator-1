@@ -116,9 +116,12 @@ int coderead(char *ifile, code *cd) {
 
 		while (fgets(rln, MAX_LEN - 1, fin)) {
 			char *ln = getNE(rln);
+			char *hf = strstr(ln, "function") || strstr(ln, "FUNCTION");
+			char *hr = strstr(ln, "RET")      || strstr(ln, "ret");
+			char *hc = strstr(ln, "CALL")     || strstr(ln, "call");
 
 			/* In order to not mix up with labels */
-			if (strstr(ln, "function") || strstr(ln, "FUNCTION"))
+			if (hf)
 				clearColon(ln);
 
 			/* there might be several labels on line, & code after them */
@@ -126,7 +129,7 @@ int coderead(char *ifile, code *cd) {
 				ln = getNE(addLabel(cd, ln));
 
 			/* Now, even if we had labels, there all lefter than 'ln' */
-			if (strstr(ln, "function") || strstr(ln, "FUNCTION")) {
+			if (hf) {
 				static int sfln = strlen("function ");
 
 				sprintf   (t_str, "JMP " RET_PREFIX "%s", ln + sfln);
@@ -138,7 +141,7 @@ int coderead(char *ifile, code *cd) {
 
 				sprintf   (f_name, "%s", ln + sfln);
 			}
-			else if (strstr(ln, "RET")) {
+			else if (hr) {
 				addLine (cd, "RET");
 
 				if (strlen(f_name)) {
@@ -146,11 +149,12 @@ int coderead(char *ifile, code *cd) {
 					addLabel(cd, t_str);
 				}
 			}
-			else if (strstr(ln, "CALL"))  {
+			else if (hc)  {
 				if (!strstr(ln, FNC_PREFIX)) {
 					static int clln = strlen("CALL ");
 
 					sprintf(t_str, "CALL " FNC_PREFIX "%s", ln + clln);
+
 					addLine(cd, t_str);
 				}
 				else
@@ -216,7 +220,7 @@ int codeprint(char *ofile, code *cd) {
 			int pos = atoi(cd->lbs[k].valu);
 
 			if (pos == i) {
-				fprintf(ofl, "%s:", cd->lbs[k].name);
+				fprintf(ofl, "%s:\n", cd->lbs[k].name);
 
 				if (lbl)
 					fprintf(ofl, "\n");
